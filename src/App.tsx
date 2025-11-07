@@ -9,13 +9,28 @@ import AddClassDialog from "./components/AddClassDialog";
 import { Button } from "./components/ui/button";
 import { toast } from "sonner";
 
+// 🔧 Cantidad de aulas por módulo (según tus datos)
+const roomCountsByModule: Record<string, number> = {
+  "Módulo A": 6,
+  "Módulo B": 6,
+  "Módulo C": 8,
+  "Módulo D": 4,
+  "Módulo Psicología": 3,
+  "Laboratorios": 4
+};
+
 // Generar aulas vacías
 const generateEmptyRooms = (moduleName: string): RoomData[] => {
-  const roomCount = moduleName === "Laboratorios" ? 12 : 20;
+  const roomCount = roomCountsByModule[moduleName] || 20;
   const rooms: RoomData[] = [];
 
   for (let i = 1; i <= roomCount; i++) {
-    const roomCode = `${moduleName.charAt(0)}${i.toString().padStart(2, "0")}`;
+    // Generar código de aula: primera letra del módulo + número
+    const moduleLetter = moduleName.includes("Módulo") 
+      ? moduleName.charAt(moduleName.length - 1) // Toma la última letra (A, B, C, D, etc.)
+      : moduleName.charAt(0); // Para Laboratorios usa "L"
+    
+    const roomCode = `${moduleLetter}${i.toString().padStart(2, "0")}`;
 
     rooms.push({
       id: `${moduleName}-${i}`,
